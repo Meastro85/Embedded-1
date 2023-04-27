@@ -20,3 +20,4 @@ void dimLed(int ledNumber, int percent, int duration);
 void fadeInLed(int ledNumber, int duration);
 void fadeOutLed(int ledNumber, int duration);
 void flashLed(int ledNumber, int duration);
+int isLedActive(int ledNumber);

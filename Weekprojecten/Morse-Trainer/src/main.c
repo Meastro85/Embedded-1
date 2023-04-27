@@ -17,13 +17,9 @@ char morseCode[5];
 
 // Methode om de Delay terug te geven afhangende van het gekregen teken
 int morseDelay(char morse){
-  if(morse == '.'){
-    return KORT;
-  } else if(morse == '-') {
-    return LANG;
-  } else {
-    return 0;
-  }
+  if(morse == '.'){ return KORT;} 
+  else if(morse == '-') {return LANG;}
+  else { return 0;}
 };
 
 // Methode voor het 'LED-Dansje'

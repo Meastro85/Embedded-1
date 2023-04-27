@@ -24,3 +24,13 @@ int buttonPushed(int button) {
 }
 
 int buttonReleased(int button) { return !buttonPushed(button); }
+
+void enableButtonInterrupt(int button){
+  if(button < MAX_NUMBER_OF_BUTTONS){
+    button += 1;
+    PCICR |= _BV(PCIE1);
+    PCMSK1 |= _BV(button);
+  }
+}
+
+void enableAllButtonInterrupts(){ for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++) enableButtonInterrupt(i);}

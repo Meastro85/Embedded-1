@@ -1,6 +1,6 @@
 #include <usart.h>
 #define MAX 5
-#define ZEVENVOUD 7
+#define ZEVENVOUD(getal) (getal * 7)
 
 void printArray(int* array) {
   printf("Inhoud van array:\n");
@@ -11,7 +11,7 @@ void printArray(int* array) {
 
 void vulArray(int* array) {
   for (int i = 0; i < MAX; i++) {
-    array[i] = i * ZEVENVOUD;
+    array[i] = ZEVENVOUD(i);
   }
 }
 

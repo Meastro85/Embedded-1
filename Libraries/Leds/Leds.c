@@ -2,8 +2,6 @@
 #include <util/delay.h>
 #include <avr/io.h>
 #include <stdlib.h>
-#include <time.h>
-#include <math.h>
 #include <Leds.h>
 
 void enableLed(int ledNumber){
@@ -90,4 +88,12 @@ void flashLed(int ledNumber, int duration){
   lightUpLed(ledNumber);
   _delay_ms(duration);
   lightDownLed(ledNumber);
+}
+
+int isLedActive(int ledNumber){
+  if(bit_is_clear(PINB, PB2 + ledNumber)){
+    return 1;
+  } else {
+    return 0;
+  }
 }
