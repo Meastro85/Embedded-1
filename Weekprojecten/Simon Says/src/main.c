@@ -20,27 +20,49 @@ ISR(PCINT1_vect){
 }
 
 void generatePuzzle(uint8_t* leds){
-  for(int i = 0; i < 10; i++){
+  for(int i = 0; i < MAX_GAME_LENGTH; i++){
     leds[i] = (uint8_t) rand() % 3;
   }
 }
 
-void printPuzzle(uint8_t* leds){
+void printPuzzle(uint8_t* leds, int* length){
   printf("[");
-  for(int i = 0; i < 10; i++){
+  for(int i = 0; i < MAX_GAME_LENGTH; i++){
     printf("%d ", leds[i]);
   }
-  printf("]");
+  printf("]\n");
 }
 
-int readInput(){
-
+int readInput(uint8_t* leds, int* length){
+  while(1){
+    for(int i = 0; i <= length; i++){
+      if(!buttonPushed(leds[i])){
+        printf("Je drukte op knop %d, fout!", leds[i]);
+        return 0;
+      } else{
+        printf("Je drukte op knop %d, juist!", leds[i]);
+      }
+    }
+    return 1;
+  }
 }
 
 int playPuzzle(uint8_t* leds){
-  for(int i = 0; i < 10; i++){
-     flashLed(leds[i],500);
+  for(int i = 0; i < MAX_GAME_LENGTH; i++){
+    for(int j = 0; j <= i; j++){
+      flashLed(leds[i],500);
+      _delay_ms(DELAY);
+    }
+    if(!readInput(leds,i)){
+      printf("Fout, het juist patroon was ");
+      printPuzzle(leds, i);
+      return 0;
+    } else {
+      printf("Correct, we gaan naar level", i + 1);
+    }
   }
+  printf("Proficiat, je bent de Simon Master!");
+  return 1;
 }
 
 int main(){
@@ -48,12 +70,13 @@ int main(){
   initUSART();
   enableAllLeds();
   enableAllButtons();
-  enableAllButtonInterrupts();
+  enableButtonInterrupt(0);
   lightDownAllLeds();
   sei();
 
-  uint8_t leds[10];
+  uint8_t leds[MAX_GAME_LENGTH];
 
+  printf("Druk op knop 1 om het spel te starten");
   while(!startGame){
     flashLed(3,500);
     seed++;
@@ -62,7 +85,7 @@ int main(){
   srand(seed);
   cli();
   generatePuzzle(leds);
-  printPuzzle(leds);
+  playPuzzle(leds);
 
   return 0;
 }
