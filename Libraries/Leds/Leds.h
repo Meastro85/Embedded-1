@@ -21,3 +21,4 @@ void fadeInLed(int ledNumber, int duration);
 void fadeOutLed(int ledNumber, int duration);
 void flashLed(int ledNumber, int duration);
 int isLedActive(int ledNumber);
+void flipLed(int ledNumber);

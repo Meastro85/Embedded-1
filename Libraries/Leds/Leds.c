@@ -88,6 +88,7 @@ void flashLed(int ledNumber, int duration){
   lightUpLed(ledNumber);
   _delay_ms(duration);
   lightDownLed(ledNumber);
+  _delay_ms(duration);
 }
 
 int isLedActive(int ledNumber){
@@ -95,5 +96,13 @@ int isLedActive(int ledNumber){
     return 1;
   } else {
     return 0;
+  }
+}
+
+void flipLed(int ledNumber){
+  if(isLedActive(ledNumber)){
+    lightDownLed(ledNumber);
+  } else {
+    lightUpLed(ledNumber);
   }
 }
