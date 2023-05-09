@@ -33,6 +33,7 @@ SONG* generateSong(char* name, uint16_t length) {
   SONG* song = calloc(length, sizeof(SONG));
   song->length = length;
   song->name = malloc(sizeof(name) + 1);
+  song->name = name;
   song->notes = calloc(length, sizeof(NOTE*));
   for (int i = 0; i < length; i++) {
     song->notes[i] = malloc(sizeof(NOTE));
@@ -60,7 +61,7 @@ SONG* generateSong(char* name, uint16_t length) {
 
 void playSong(SONG* song){
   for(int i = 0; i < song->length; i++){
-    printf("Playin note: %d for duration %d", song->notes[i]->frequency, song->notes[i]->duration);
+    printf("Playing note: %f for duration %d\n", song->notes[i]->frequency, song->notes[i]->duration);
     playNote(song->notes[i]);
   }
 }
@@ -79,7 +80,7 @@ int main() {
       srand(teller);
       SONG* song = generateSong("Kaas cappelo", 10);
       for(int i = 0; i < 2 ; i++){
-        printf("Now playing: %s", song->name);
+        printf("Now playing: %s\n", song->name);
         playSong(song);
       }
       for(int i = 0; i < 10; i ++){
