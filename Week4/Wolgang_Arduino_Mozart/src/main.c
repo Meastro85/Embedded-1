@@ -5,10 +5,12 @@
 #include <util/delay.h>
 #include <usart.h>
 #include <Buttons.h>
+#include <string.h>
 
 #define DURATIONSHORT 250
 #define DURATIONMEDIUM 500
 #define DURATIONLONG 1000
+#define FREQUENCIES
 
 typedef struct{
   float frequency;
@@ -33,7 +35,7 @@ SONG* generateSong(char* name, uint16_t length) {
   SONG* song = calloc(length, sizeof(SONG));
   song->length = length;
   song->name = malloc(sizeof(name) + 1);
-  song->name = name;
+  strcopy(song->name, name);
   song->notes = calloc(length, sizeof(NOTE*));
   for (int i = 0; i < length; i++) {
     song->notes[i] = malloc(sizeof(NOTE));
@@ -44,16 +46,7 @@ SONG* generateSong(char* name, uint16_t length) {
       case 2: song->notes[i]->duration = DURATIONLONG; break;
     }
     uint32_t frequencies[] = {C5, D5, E5, F5, G5, A5, B5, C6};
-    switch (rand() % 8){
-      case 0: song->notes[i]->frequency = frequencies[0]; break;
-      case 1: song->notes[i]->frequency = frequencies[1]; break;
-      case 2: song->notes[i]->frequency = frequencies[2]; break;
-      case 3: song->notes[i]->frequency = frequencies[3]; break;
-      case 4: song->notes[i]->frequency = frequencies[4]; break;
-      case 5: song->notes[i]->frequency = frequencies[5]; break;
-      case 6: song->notes[i]->frequency = frequencies[6]; break;
-      case 7: song->notes[i]->frequency = frequencies[7]; break;
-    }
+    song->notes[i]->frequency = frequencies[rand() % 8];
 
   }
   return song;

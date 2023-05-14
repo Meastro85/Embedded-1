@@ -9,7 +9,7 @@ void initTimer(uint8_t timer, uint8_t mode, uint8_t interrupts);
 /// @brief Start a timer with the defined factor
 /// @param timer Value of 0 to 2
 /// @param factor Can be either 1, 8, 64, 128, 256 or 1024
-void startTimer(uint8_t timer, uint8_t factor);
+void startTimer(uint8_t timer, int factor);
 
 /// @brief Stop a timer
 /// @param timer value of 0 to 2
@@ -18,4 +18,4 @@ void stopTimer(uint8_t timer);
 /// @brief Set the OCRxA interrupt value
 /// @param timer value of 0 to 2
 /// @param value value for the interrupt
-void setOCRXA(uint8_t timer, int value);
+void setOCRXA(uint8_t timer, long value);
