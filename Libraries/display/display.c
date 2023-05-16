@@ -99,10 +99,9 @@ void writeCharToSegment(uint8_t segment, char character){
 
 void writeString(char* str){
   if(strlen(str) <= 4){
-    writeCharToSegment(0, str[0]);
-    writeCharToSegment(0, str[1]);
-    writeCharToSegment(0, str[2]);
-    writeCharToSegment(0, str[3]);
+    for(int i = 0; i < strlen(str); i++){
+      writeCharToSegment(i, str[i]);
+    }
   }
 }
 
@@ -122,7 +121,5 @@ void writeStringAndWait(char* str, int delay){
 
 void scrollingString(char* str, int delay) {
   int lengte = strlen(str);
-  for (int i = 0; i < (lengte - 3); i++) {
-    writeStringAndWait(&str[i], delay);
-  }
+  for (int i = 0; i < (lengte - 3); i++) writeStringAndWait(&str[i], delay);
 }

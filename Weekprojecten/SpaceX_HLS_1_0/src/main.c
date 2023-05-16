@@ -3,9 +3,9 @@
 #include <Timers.h>
 #include <avr/interrupt.h>
 #include <display.h>
+#include <stdlib.h>
 #include <usart.h>
 #include <util/delay.h>
-#include <stdlib.h>
 
 #define VEELVOUD 250
 #define STARTFUEL 1500
@@ -20,15 +20,14 @@ double distance;
 uint16_t fuelReserve;
 uint16_t burst = 0;
 
-typedef struct{
+typedef struct {
   double distance;
   uint16_t burst;
   double currentSpeed;
   uint16_t fuelReserve;
-  uint8_t seconden;
 } LOG;
 
-LOG** logArray;
+LOG* logArray;
 
 void showDashboard() {
   writeNumberAndWait(distance, 500);
@@ -45,17 +44,8 @@ void showDashboard() {
   for (int i = activeLeds; i < LEDS; i++) lightDownLed(i);
 }
 
-void writeLog() {
-    logArray[seconden]->currentSpeed = currentSpeed;
-    logArray[seconden]->distance = distance;
-    logArray[seconden]->fuelReserve = fuelReserve;
-    logArray[seconden]->seconden = seconden;
-}
 
 ISR(TIMER2_COMPA_vect) {
-  if(logArray == NULL){
-    logArray = calloc(250, sizeof(LOG));
-  }
   timerCounter++;
   if ((timerCounter + 1) % VEELVOUD == 0) {
     seconden++;
@@ -63,7 +53,9 @@ ISR(TIMER2_COMPA_vect) {
     distance -= currentSpeed;
     fuelReserve -= burst;
     burst = 0;
-    writeLog();
+    logArray[seconden].currentSpeed = currentSpeed;
+    logArray[seconden].distance = distance;
+    logArray[seconden].fuelReserve = fuelReserve;
   }
 }
 
@@ -88,39 +80,40 @@ int main() {
   enableAllButtons();
   enableButtonInterrupt(1);
 
-while(1){
-  writeString("STRT");
-  if(buttonPushed(0)){
-    _delay_us(500);
-    if(buttonPushed(0)){
-      startTimer(2, 256);
-      sei();
-      distance = 9999;
-      currentSpeed = 100;
-      seconden = 0;
-      fuelReserve = STARTFUEL;
-  while (distance > 3) {
-    showDashboard();
-  }
+  while (1) {
+    logArray = calloc(100, sizeof(LOG));
+    writeString("STRT");
+    distance = 9999;
+    currentSpeed = 100;
+    seconden = 0;
+    fuelReserve = STARTFUEL;
+    if (buttonPushed(0)) {
+      _delay_us(500);
+      if (buttonPushed(0)) {
+        startTimer(2, 256);
+        sei();
+        while (distance > 3) {
+          showDashboard();
+        }
+        cli();
+        stopTimer(2);
 
-  cli();
-  stopTimer(2);
-
-  for(int i = 0; i < sizeof(logArray)/sizeof(int); i++){
-    printf("LOG Seconden %d:\n",logArray[i]->seconden);
-    printf("Speed: %d\n", logArray[i]->currentSpeed);
-    printf("Distance: %d\n", logArray[i]->distance);
-    printf("Fuel reserve: %d\n", logArray[i]->fuelReserve);
-  }
-  if(distance <= 3 && currentSpeed <= 5){
-    printf("Succesfully landed!\n");
-    scrollingString("LANDED", 10000);
-  } else {
-    printf("Crashed!!!\n");
-    scrollingString("CRASHED", 10000);
-  }
+        for(int i = 0; i < 100; i++){
+          printf("LOG timestamp: %d\n", i);
+          printf("Speed: %s\n", dtostrf(logArray[i].currentSpeed,4,2,""));
+          printf("Distance: %s\n", dtostrf(logArray[i].distance,4,2,""));
+          printf("Fuel reserve: %d\n", logArray[i].fuelReserve);
+        }
+        if (distance <= 3 && currentSpeed <= 5) {
+          printf("Succesfully landed!\n");
+          scrollingString("LANDED", 5000);
+        } else {
+          printf("Crashed!!!\n");
+          scrollingString("CRASHED", 5000);
+        }
+      }
     }
+    free(logArray);
   }
-}
   return 0;
 }

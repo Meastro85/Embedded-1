@@ -5,5 +5,18 @@
 #include <Buzzer.h>
 #include <display.h>
 #include <Potentio.h>
+#include <usart.h>
 #include <avr/io.h>
 #include <util/delay.h>
+
+int main(){
+  initUSART();
+  enableButton(0);
+
+  while(1){
+    if(buttonPushed(0)){
+      
+    }
+  }
+  return 0;
+}
