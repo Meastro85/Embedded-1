@@ -1,6 +1,7 @@
 package model;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
 
 /**
  * Vincent Verboven
@@ -23,12 +24,20 @@ public class SerialArduinoConnection {
     public byte[] receiveBytes(){
         byte[] newData = new byte[arduinoPort.bytesAvailable()];
         arduinoPort.readBytes(newData, newData.length);
-        System.out.print("Receiving data from Arduino:");
+        /*System.out.print("Receiving data from Arduino:");
         for (byte newDatum : newData) {
             System.out.printf("%c",(char)newDatum);
         }
-        System.out.println();
+
+        if(newData.length != 0){
+            System.out.println(Arrays.toString(newData));
+            System.out.println();
+        }*/
         return newData;
+    }
+
+    public void addDatalistener(SerialPortDataListener dataListener){
+        arduinoPort.addDataListener(dataListener);
     }
 
 }

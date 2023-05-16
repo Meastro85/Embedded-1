@@ -15,7 +15,11 @@ int main(){
 
   while(1){
     if(buttonPushed(0)){
-      
+      _delay_us(500);
+      if(buttonPushed(0)){
+        printf("[[0, 0, 0, 0], [0, 1, 1, 1], [0, 0, 1, 1], [0, 0, 0, 0]]");
+        _delay_ms(1000);
+      }
     }
   }
   return 0;
