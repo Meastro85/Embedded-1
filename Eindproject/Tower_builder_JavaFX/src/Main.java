@@ -24,8 +24,9 @@ public class Main extends Application {
         new GamePresenter(con, view);
         Scene scene = new Scene(view);
         stage.setScene(scene);
-        stage.setWidth(200);
-        stage.setHeight(300);
+        stage.setWidth(600);
+        stage.setHeight(700);
+        stage.setResizable(false);
         stage.show();
     }
 }

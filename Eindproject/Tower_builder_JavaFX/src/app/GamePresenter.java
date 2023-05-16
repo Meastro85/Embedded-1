@@ -1,18 +1,17 @@
 package app;
 
+import buildingblocks.WallBlock;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import model.SerialArduinoConnection;
+import model.TypeConverter;
 
 import java.util.Arrays;
+
 
 /**
  * Vincent Verboven
@@ -40,26 +39,18 @@ public class GamePresenter implements SerialPortDataListener {
             return;
         }
         String[][] tileArray = {};
+        StringBuilder stringB = new StringBuilder();
 
-        try {
-            Thread.sleep(75);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        do{
+            stringB.append(new String(con.receiveBytes()));
+        }while(!stringB.toString().endsWith("$"));
 
-        String string = new String(con.receiveBytes());
-        if(string.contains("]")){
-            string = string.replace("[", "");
-            string = string.substring(0, string.length()-2);
-            String[] array = string.split("],");
-            tileArray = new String[array.length][array.length];
+        String string = stringB.toString().replace("$","");
 
-            for(int i = 0; i < array.length; i++){
-                array[i] = array[i].trim();
-                String[] number  = array[i].split(", ");
-
-                System.arraycopy(number, 0, tileArray[i], 0, number.length);
-            }
+        if(string.startsWith("2DArray:")){
+            string = string.replace("2DArray:","");
+            System.out.println(string);
+            tileArray = TypeConverter.convertTo2DArray(string);
         }
 
         String[][] finalTileArray = tileArray;
@@ -67,11 +58,15 @@ public class GamePresenter implements SerialPortDataListener {
             if(finalTileArray.length != 0){
                 for(int i = 0; i < finalTileArray.length; i++){
                     for(int j = 0; j < finalTileArray[i].length; j++){
+                        ImageView block = view.getBlocks()[i][j];
                         if(Integer.parseInt(finalTileArray[i][j]) > 0){
-                            Label block = view.getBlocks()[i][j];
-                            block.setPrefWidth(50);
-                            block.setPrefHeight(50);
-                            block.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+                            System.out.println(finalTileArray[i][j]);
+                            WallBlock wallBlock = new WallBlock(view.getWidth(), view.getHeight());
+                            block.setFitWidth(wallBlock.getWidth());
+                            block.setFitHeight(wallBlock.getHeight());
+                            block.setImage(new Image(wallBlock.getImageUrl()));
+                        } else{
+                            block.imageProperty().set(null);
                         }
                     }
                 }

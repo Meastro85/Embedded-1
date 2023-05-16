@@ -1,8 +1,6 @@
 package app;
 
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -14,8 +12,7 @@ import javafx.scene.layout.RowConstraints;
  */
 public class GameView extends GridPane {
     private TextArea tileArray;
-    private ImageView block;
-    private Label[][] blocks = new Label[4][4];
+    private final ImageView[][] blocks = new ImageView[4][5];
 
     public GameView() {
         initialiseNodes();
@@ -24,20 +21,19 @@ public class GameView extends GridPane {
 
     void initialiseNodes() {
         tileArray = new TextArea();
-        block = new ImageView();
 
         for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 4; j++){
-                blocks[i][j] = new Label();
+            for(int j = 0; j < 5; j++){
+                blocks[i][j] = new ImageView();
             }
         }
 
-        for(int i = 0; i < 6; ++i){
+        for(int i = 0; i < 7; ++i){
             RowConstraints rconstraints = new RowConstraints();
             rconstraints.setPercentHeight(100.0/3);
             this.getRowConstraints().add(rconstraints);
         }
-        for(int i = 0; i < 4; ++i){
+        for(int i = 0; i < 6; ++i){
             ColumnConstraints cconstraints = new ColumnConstraints();
             cconstraints.setPercentWidth(100.0/3);
             this.getColumnConstraints().add(cconstraints);
@@ -47,8 +43,8 @@ public class GameView extends GridPane {
 
     void layoutNodes() {
         for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 4; j++){
-                this.add(blocks[i][j], i, j+2);
+            for(int j = 0; j < 5; j++){
+                this.add(blocks[i][j], i+1, j+1);
             }
         }
         this.setGridLinesVisible(true);
@@ -56,8 +52,10 @@ public class GameView extends GridPane {
 
     TextArea getTileArray(){return tileArray;}
 
-    ImageView getBlock(){return block;}
+    ImageView[][] getBlocks(){return blocks;}
 
-    Label[][] getBlocks(){return blocks;}
+    void resetBlock(int i, int j){
+        blocks[i][j] = new ImageView();
+    }
 
 }
