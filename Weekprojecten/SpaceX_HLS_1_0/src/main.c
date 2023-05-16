@@ -108,7 +108,9 @@ while(1){
 
   for(int i = 0; i < sizeof(logArray)/sizeof(int); i++){
     printf("LOG Seconden %d:\n",logArray[i]->seconden);
-    printf("Speed: %d\n",);
+    printf("Speed: %d\n", logArray[i]->currentSpeed);
+    printf("Distance: %d\n", logArray[i]->distance);
+    printf("Fuel reserve: %d\n", logArray[i]->fuelReserve);
   }
   if(distance <= 3 && currentSpeed <= 5){
     printf("Succesfully landed!\n");
