@@ -24,15 +24,6 @@ public class SerialArduinoConnection {
     public byte[] receiveBytes(){
         byte[] newData = new byte[arduinoPort.bytesAvailable()];
         arduinoPort.readBytes(newData, newData.length);
-        /*System.out.print("Receiving data from Arduino:");
-        for (byte newDatum : newData) {
-            System.out.printf("%c",(char)newDatum);
-        }
-
-        if(newData.length != 0){
-            System.out.println(Arrays.toString(newData));
-            System.out.println();
-        }*/
         return newData;
     }
 

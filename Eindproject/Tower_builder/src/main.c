@@ -25,21 +25,23 @@ int** tileArray;
 int direction;
 
 typedef struct {
-  double velocity;
-  int amountOfBlocks;
+  uint8_t amountOfBlocks;
+  uint8_t velocity;
 } LEVEL;
 
 typedef struct {
-  LEVEL level;
   uint8_t hp;
   int score;
 } STATS;
 
+LEVEL* level;
 STATS* playerStats;
 
 void initGame() {
   playerStats->hp = 4;
-  printf("%d", playerStats->hp);
+  playerStats->score = 0;
+  level->velocity = 250;
+  level->amountOfBlocks = 10;
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 5; j++) {
       if (j == 4) {
@@ -86,15 +88,15 @@ void addBlock() {
   sendTileArray();
 }
 
-void moveBlock(){
-  if(tileArray[0][0] > 0){
+void moveBlock() {
+  if (tileArray[0][0] > 0) {
     direction = 1;
-  } else if(tileArray[3][0] > 0){
+  } else if (tileArray[3][0] > 0) {
     direction = -1;
   }
 
-  for(int i = 0; i < 4; i++){
-    if(tileArray[i][0] > 0){
+  for (int i = 0; i < 4; i++) {
+    if (tileArray[i][0] > 0) {
       tileArray[i + direction][0] = tileArray[i][0];
       tileArray[i][0] = 0;
       sendTileArray();
@@ -103,21 +105,42 @@ void moveBlock(){
   }
 }
 
-void placeBlock(){
-  for(int i = 0; i < 4; i++){
-    if(tileArray[i][0] > 0){
-      for(int j = 1; j < 5; j++){
-        if(tileArray[i][j] > 0){
-          tileArray[i][j-1] = tileArray[i][0];
+void placeBlock() {
+  for (int i = 0; i < 4; i++) {
+    if (tileArray[i][0] > 0) {  // Check position of block in the first row
+      if (tileArray[i][2] > 0) {
+        for (int k = 0; k < 4; k++) {
+          for (int l = 4; l > 1; l--) {
+            tileArray[k][l] = tileArray[k][l - 1];
+          }
+        }
+      }
+      for (int j = 2; j < 5; j++) {
+        if (tileArray[i][j] > 0 &&
+            j != 2) {  // If any block in that column is > 0, place block and
+                       // make new one.
+          tileArray[i][j - 1] = tileArray[i][0];
           tileArray[i][0] = 0;
           addBlock();
+          playerStats->score++;
+          level->amountOfBlocks--;
+          playTone(C6, 100);
+          printf("Score: %d$$$", playerStats->score);
+          return;
+        }
+        if(tileArray[i][4] == 0){
+          tileArray[i][0] = 0;
+          playerStats->hp--;
+          level->amountOfBlocks--;
+          addBlock();
+          playTone(C5, 100);
+          playTone(G5, 100);
+          playTone(B5, 100);
+          printf("HP: %d$", playerStats->hp);
           return;
         }
       }
     }
-  }
-  if(tileArray[0][0] == 0){
-    addBlock();
   }
 }
 
@@ -129,18 +152,18 @@ ISR(PCINT1_vect) {
     }
   }
 
-  if(buttonPushed(1)){
+  if (buttonPushed(1)) {
     _delay_us(500);
-    if(buttonPushed(1)){
+    if (buttonPushed(1)) {
       placeBlock();
       sendTileArray();
     }
   }
 }
 
-ISR(TIMER2_COMPA_vect){
+ISR(TIMER2_COMPA_vect) {
   timerCounter++;
-  if((timerCounter + 1) % 250 == 0){
+  if ((timerCounter + 1) % level->velocity == 0) {
     moveBlock();
     timerCounter = 0;
   }
@@ -155,6 +178,7 @@ int main() {
   initDisplay();
   enableAllButtons();
   enableAllButtonInterrupts();
+  enableBuzzer();
   initTimer(2, 0, 0);
   setOCRXA(2, 249);
 
@@ -175,13 +199,22 @@ int main() {
       tileArray[i] = malloc(5 * sizeof(int));
     }
     playerStats = malloc(sizeof(playerStats));
+    level = malloc(sizeof(level));
 
     initGame();
     sendTileArray();
-    startTimer(2,256);
+    startTimer(2, 256);
     addBlock();
     while (playerStats->hp > 0) {
+      writeNumber(playerStats->score);
+      lightDownLed(playerStats->hp);
+      if(level->amountOfBlocks == 0){
+        level->amountOfBlocks = (rand() % 20) + 1;
+        level->velocity = (rand() % 200) + 51;
+      }
     }
+    printf("stop$");
+    cli();
 
     for (int i = 0; i < 4; i++) {
       free(tileArray[i]);

@@ -1,6 +1,5 @@
 package app;
 
-import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -11,7 +10,7 @@ import javafx.scene.layout.RowConstraints;
  * 16/05/2023
  */
 public class GameView extends GridPane {
-    private TextArea tileArray;
+
     private final ImageView[][] blocks = new ImageView[4][5];
 
     public GameView() {
@@ -20,8 +19,6 @@ public class GameView extends GridPane {
     }
 
     void initialiseNodes() {
-        tileArray = new TextArea();
-
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 5; j++){
                 blocks[i][j] = new ImageView();
@@ -50,12 +47,7 @@ public class GameView extends GridPane {
         this.setGridLinesVisible(true);
     }
 
-    TextArea getTileArray(){return tileArray;}
-
     ImageView[][] getBlocks(){return blocks;}
 
-    void resetBlock(int i, int j){
-        blocks[i][j] = new ImageView();
-    }
 
 }

@@ -10,8 +10,6 @@ import javafx.scene.image.ImageView;
 import model.SerialArduinoConnection;
 import model.TypeConverter;
 
-import java.util.Arrays;
-
 
 /**
  * Vincent Verboven
@@ -49,8 +47,10 @@ public class GamePresenter implements SerialPortDataListener {
 
         if(string.startsWith("2DArray:")){
             string = string.replace("2DArray:","");
-            System.out.println(string);
+            //System.out.println(string);
             tileArray = TypeConverter.convertTo2DArray(string);
+        } else {
+            System.out.println(string);
         }
 
         String[][] finalTileArray = tileArray;
@@ -60,7 +60,7 @@ public class GamePresenter implements SerialPortDataListener {
                     for(int j = 0; j < finalTileArray[i].length; j++){
                         ImageView block = view.getBlocks()[i][j];
                         if(Integer.parseInt(finalTileArray[i][j]) > 0){
-                            System.out.println(finalTileArray[i][j]);
+                            //System.out.println(finalTileArray[i][j]);
                             WallBlock wallBlock = new WallBlock(view.getWidth(), view.getHeight());
                             block.setFitWidth(wallBlock.getWidth());
                             block.setFitHeight(wallBlock.getHeight());
