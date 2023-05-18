@@ -9,8 +9,8 @@ public abstract class BaseBlock {
     String imageUrl;
 
     public BaseBlock(double screenWidth, double screenHeight, String imageUrl){
-        width = screenWidth / widthBlocks;
-        height = screenHeight / heightBlocks;
+        width = screenWidth / (double) widthBlocks;
+        height = screenHeight / (double) heightBlocks;
         this.imageUrl = imageUrl;
     }
 

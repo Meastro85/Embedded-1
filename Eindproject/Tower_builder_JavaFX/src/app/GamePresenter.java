@@ -1,5 +1,6 @@
 package app;
 
+import buildingblocks.GrassBlock;
 import buildingblocks.WallBlock;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -10,6 +11,8 @@ import javafx.scene.image.ImageView;
 import model.SerialArduinoConnection;
 import model.TypeConverter;
 
+import java.util.Random;
+
 
 /**
  * Vincent Verboven
@@ -17,8 +20,9 @@ import model.TypeConverter;
  */
 public class GamePresenter implements SerialPortDataListener {
 
-    SerialArduinoConnection con;
-    GameView view;
+    private final SerialArduinoConnection con;
+    private final GameView view;
+    private Random random;
 
     public GamePresenter(SerialArduinoConnection con, GameView view) {
         this.con = con;
@@ -59,12 +63,19 @@ public class GamePresenter implements SerialPortDataListener {
                 for(int i = 0; i < finalTileArray.length; i++){
                     for(int j = 0; j < finalTileArray[i].length; j++){
                         ImageView block = view.getBlocks()[i][j];
-                        if(Integer.parseInt(finalTileArray[i][j]) > 0){
+                        int tile = Integer.parseInt(finalTileArray[i][j]);
+                        if(tile > 0){
                             //System.out.println(finalTileArray[i][j]);
                             WallBlock wallBlock = new WallBlock(view.getWidth(), view.getHeight());
                             block.setFitWidth(wallBlock.getWidth());
                             block.setFitHeight(wallBlock.getHeight());
-                            block.setImage(new Image(wallBlock.getImageUrl()));
+                            if(tile == 4){
+                                block.setImage(new Image("images/sprites/Door.png"));
+                            } else if (tile == 1 && j == 4){
+                                block.setImage(new Image("images/sprites/BottomWall.png"));
+                            } else {
+                                block.setImage(new Image(wallBlock.getImageUrl()));
+                            }
                         } else{
                             block.imageProperty().set(null);
                         }

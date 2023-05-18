@@ -18,14 +18,18 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        final int WIDTH = 600;
+        final int HEIGHT = 700;
+
         SerialArduinoConnection con = new SerialArduinoConnection();
-        GameView view = new GameView();
+        GameView view = new GameView(WIDTH, HEIGHT);
 
         new GamePresenter(con, view);
         Scene scene = new Scene(view);
         stage.setScene(scene);
-        stage.setWidth(600);
-        stage.setHeight(700);
+        stage.setWidth(WIDTH);
+        stage.setHeight(HEIGHT);
         stage.setResizable(false);
         stage.show();
     }
