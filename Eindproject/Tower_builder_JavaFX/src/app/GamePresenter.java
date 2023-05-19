@@ -73,8 +73,12 @@ public class GamePresenter implements SerialPortDataListener {
                                 block.setImage(new Image("images/sprites/Door.png"));
                             } else if (tile == 1 && j == 4){
                                 block.setImage(new Image("images/sprites/BottomWall.png"));
-                            } else {
+                            } else if (tile == 1){
                                 block.setImage(new Image(wallBlock.getImageUrl()));
+                            } else if (tile == 2){
+                                block.setImage(new Image("images/sprites/Window.png"));
+                            } else if(tile == 3){
+                                block.setImage(new Image("images/sprites/Roof.png"));
                             }
                         } else{
                             block.imageProperty().set(null);
