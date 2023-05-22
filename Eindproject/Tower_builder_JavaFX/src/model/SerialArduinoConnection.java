@@ -31,4 +31,9 @@ public class SerialArduinoConnection {
         arduinoPort.addDataListener(dataListener);
     }
 
+    public void closePort(){
+        arduinoPort.closePort();
+        System.out.println("Port closed!");
+    }
+
 }

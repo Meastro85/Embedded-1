@@ -14,6 +14,7 @@
 
 #define SKYPIECE 0
 #define WALLPIECE 1
+#define BOTTOMWALLPIECE 5
 #define WINDOWPIECE 2
 #define ROOFPIECE 3
 #define DOORPIECE 4
@@ -46,7 +47,7 @@ void initGame() {
     for (int j = 0; j < 5; j++) {
       if (j == 4) {
         if (rand() % 2 == 1) {
-          tileArray[i][j] = WALLPIECE;
+          tileArray[i][j] = BOTTOMWALLPIECE;
         } else {
           tileArray[i][j] = DOORPIECE;
         }
@@ -178,7 +179,7 @@ int main() {
   initDisplay();
   enableAllButtons();
   enableAllButtonInterrupts();
-  enableBuzzer();
+  //enableBuzzer();
   initTimer(2, 0, 0);
   setOCRXA(2, 249);
 
@@ -210,7 +211,7 @@ int main() {
       lightDownLed(playerStats->hp);
       if(level->amountOfBlocks == 0){
         level->amountOfBlocks = (rand() % 20) + 1;
-        level->velocity = (rand() % 200) + 51;
+        level->velocity = (rand() % 100) + 51;
       }
     }
     printf("stop$");

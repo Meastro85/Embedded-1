@@ -1,13 +1,13 @@
 package app;
 
 import buildingblocks.GrassBlock;
+import javafx.geometry.HPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
-import java.util.Random;
+import javafx.scene.text.Text;
 
 /**
  * Vincent Verboven
@@ -22,11 +22,10 @@ public class GameView extends GridPane {
     private final ImageView[][] skyBlocks = new ImageView[6][7];
     private final int WIDTH;
     private final int HEIGHT;
-    private Random random;
+    private Text startText = new Text();
 
 
     public GameView(int width, int height) {
-        this.random = new Random();
         this.WIDTH = width;
         this.HEIGHT = height;
         initialiseNodes();
@@ -83,6 +82,9 @@ public class GameView extends GridPane {
             this.getColumnConstraints().add(cconstraints);
         }
 
+        startText = new Text("Press button 1 to start");
+        startText.setStyle("-fx-font-size: 3em");
+
     }
 
     void layoutNodes() {
@@ -103,6 +105,10 @@ public class GameView extends GridPane {
             this.add(grassBlocks[i], i, 6);
         }
 
+        GridPane.setColumnSpan(startText,4);
+        GridPane.setHalignment(startText, HPos.CENTER);
+
+        this.add(startText, 1,3);
         this.add(treeOne, 0, 5);
         this.add(treeTwo, 5, 5);
 
@@ -110,6 +116,10 @@ public class GameView extends GridPane {
 
     ImageView[][] getBlocks() {
         return blocks;
+    }
+
+    Text getStartText(){
+        return startText;
     }
 
 

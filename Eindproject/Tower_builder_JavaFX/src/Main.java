@@ -31,6 +31,10 @@ public class Main extends Application {
         stage.setWidth(WIDTH);
         stage.setHeight(HEIGHT);
         stage.setResizable(false);
+        stage.setTitle("Tower Builder");
+        stage.setOnCloseRequest(windowEvent -> {
+            con.closePort();
+        });
         stage.show();
     }
 }

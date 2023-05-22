@@ -1,6 +1,5 @@
 package app;
 
-import buildingblocks.GrassBlock;
 import buildingblocks.WallBlock;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -22,7 +21,6 @@ public class GamePresenter implements SerialPortDataListener {
 
     private final SerialArduinoConnection con;
     private final GameView view;
-    private Random random;
 
     public GamePresenter(SerialArduinoConnection con, GameView view) {
         this.con = con;
@@ -50,6 +48,9 @@ public class GamePresenter implements SerialPortDataListener {
         String string = stringB.toString().replace("$","");
 
         if(string.startsWith("2DArray:")){
+            if(!view.getStartText().getStyle().contains("visibility: hidden")){
+                view.getStartText().setStyle("visibility: hidden");
+            }
             string = string.replace("2DArray:","");
             //System.out.println(string);
             tileArray = TypeConverter.convertTo2DArray(string);
@@ -71,7 +72,7 @@ public class GamePresenter implements SerialPortDataListener {
                             block.setFitHeight(wallBlock.getHeight());
                             if(tile == 4){
                                 block.setImage(new Image("images/sprites/Door.png"));
-                            } else if (tile == 1 && j == 4){
+                            } else if (tile == 5){
                                 block.setImage(new Image("images/sprites/BottomWall.png"));
                             } else if (tile == 1){
                                 block.setImage(new Image(wallBlock.getImageUrl()));
