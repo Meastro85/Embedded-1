@@ -126,10 +126,9 @@ void placeBlock() {
           playerStats->score++;
           level->amountOfBlocks--;
           playTone(C6, 100);
-          printf("Score: %d$$$", playerStats->score);
           return;
         }
-        if(tileArray[i][4] == 0){
+        if (tileArray[i][4] == 0) {
           tileArray[i][0] = 0;
           playerStats->hp--;
           level->amountOfBlocks--;
@@ -137,7 +136,6 @@ void placeBlock() {
           playTone(C5, 100);
           playTone(G5, 100);
           playTone(B5, 100);
-          printf("HP: %d$", playerStats->hp);
           return;
         }
       }
@@ -152,12 +150,13 @@ ISR(PCINT1_vect) {
       startGame = 1;
     }
   }
-
-  if (buttonPushed(1)) {
-    _delay_us(500);
+  if (startGame == 1) {
     if (buttonPushed(1)) {
-      placeBlock();
-      sendTileArray();
+      _delay_us(500);
+      if (buttonPushed(1)) {
+        placeBlock();
+        sendTileArray();
+      }
     }
   }
 }
@@ -173,13 +172,12 @@ ISR(TIMER2_COMPA_vect) {
 int main() {
   enableAllLeds();
   lightDownAllLeds();
-
   initUSART();
   initADC();
   initDisplay();
   enableAllButtons();
   enableAllButtonInterrupts();
-  //enableBuzzer();
+  // enableBuzzer();
   initTimer(2, 0, 0);
   setOCRXA(2, 249);
 
@@ -194,7 +192,6 @@ int main() {
     }
 
     srand(readPotentio());
-    // printf("STRING:STARTEND"); // Start game
     tileArray = malloc(4 * sizeof(int));
     for (int i = 0; i < 4; i++) {
       tileArray[i] = malloc(5 * sizeof(int));
@@ -209,17 +206,20 @@ int main() {
     while (playerStats->hp > 0) {
       writeNumber(playerStats->score);
       lightDownLed(playerStats->hp);
-      if(level->amountOfBlocks == 0){
+      if (level->amountOfBlocks == 0) {
         level->amountOfBlocks = (rand() % 20) + 1;
         level->velocity = (rand() % 100) + 51;
       }
     }
-    printf("stop$");
+    printf("stop%d$", playerStats->score);
+    stopTimer(2);
     cli();
 
     for (int i = 0; i < 4; i++) {
       free(tileArray[i]);
     }
+    free(playerStats);
+    free(level);
     free(tileArray);
     startGame = 0;
   }

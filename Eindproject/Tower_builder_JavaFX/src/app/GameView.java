@@ -2,11 +2,15 @@ package app;
 
 import buildingblocks.GrassBlock;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
@@ -22,7 +26,9 @@ public class GameView extends GridPane {
     private final ImageView[][] skyBlocks = new ImageView[6][7];
     private final int WIDTH;
     private final int HEIGHT;
-    private Text startText = new Text();
+    private Text startText;
+    private Text scoreText;
+    private VBox textBox;
 
 
     public GameView(int width, int height) {
@@ -38,6 +44,9 @@ public class GameView extends GridPane {
                 blocks[i][j] = new ImageView();
             }
         }
+
+        scoreText = new Text();
+        textBox = new VBox();
 
         GrassBlock grassBlock = new GrassBlock(WIDTH, HEIGHT);
         for (int i = 0; i < 6; i++) {
@@ -85,6 +94,10 @@ public class GameView extends GridPane {
         startText = new Text("Press button 1 to start");
         startText.setStyle("-fx-font-size: 3em");
 
+        scoreText.setStyle("visibility: hidden");
+
+        textBox.getChildren().addAll(startText, scoreText);
+
     }
 
     void layoutNodes() {
@@ -105,10 +118,13 @@ public class GameView extends GridPane {
             this.add(grassBlocks[i], i, 6);
         }
 
-        GridPane.setColumnSpan(startText,4);
-        GridPane.setHalignment(startText, HPos.CENTER);
+        GridPane.setColumnSpan(textBox, 4);
+        GridPane.setRowSpan(textBox, 2);
+        GridPane.setValignment(textBox, VPos.CENTER);
+        GridPane.setHalignment(textBox, HPos.CENTER);
+        textBox.setAlignment(Pos.CENTER);
 
-        this.add(startText, 1,3);
+        this.add(textBox, 1,3);
         this.add(treeOne, 0, 5);
         this.add(treeTwo, 5, 5);
 
@@ -122,5 +138,8 @@ public class GameView extends GridPane {
         return startText;
     }
 
+    Text getScoreText(){
+        return scoreText;
+    }
 
 }

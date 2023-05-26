@@ -99,10 +99,7 @@ int main() {
         stopTimer(2);
 
         for(int i = 0; i < 100; i++){
-          printf("LOG timestamp: %d\n", i);
-          printf("Speed: %s\n", dtostrf(logArray[i].currentSpeed,4,2,""));
-          printf("Distance: %s\n", dtostrf(logArray[i].distance,4,2,""));
-          printf("Fuel reserve: %d\n", logArray[i].fuelReserve);
+          printf("LOG timestamp: %3d, Speed: %5s, Distance: %6s, Fuel reserve: %4d\n",i ,dtostrf(logArray[i].currentSpeed,4,2,""), dtostrf(logArray[i].distance,4,2,""), logArray[i].fuelReserve );
         }
         if (distance <= 3 && currentSpeed <= 5) {
           printf("Succesfully landed!\n");

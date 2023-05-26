@@ -10,8 +10,6 @@ import javafx.scene.image.ImageView;
 import model.SerialArduinoConnection;
 import model.TypeConverter;
 
-import java.util.Random;
-
 
 /**
  * Vincent Verboven
@@ -46,16 +44,19 @@ public class GamePresenter implements SerialPortDataListener {
         }while(!stringB.toString().endsWith("$"));
 
         String string = stringB.toString().replace("$","");
-
         if(string.startsWith("2DArray:")){
             if(!view.getStartText().getStyle().contains("visibility: hidden")){
                 view.getStartText().setStyle("visibility: hidden");
+                view.getScoreText().setStyle("visibility: hidden");
             }
             string = string.replace("2DArray:","");
-            //System.out.println(string);
             tileArray = TypeConverter.convertTo2DArray(string);
-        } else {
-            System.out.println(string);
+        } else if(string.startsWith("stop")){
+            view.getStartText().setStyle("visibility: visible; -fx-font-size: 3em; ");
+            string = string.replace("stop","");
+            int score = TypeConverter.convertToInt(string);
+            view.getScoreText().setText("Score: " + score);
+            view.getScoreText().setStyle("visibility: visible; -fx-font-size: 3em; ");
         }
 
         String[][] finalTileArray = tileArray;
@@ -66,7 +67,6 @@ public class GamePresenter implements SerialPortDataListener {
                         ImageView block = view.getBlocks()[i][j];
                         int tile = Integer.parseInt(finalTileArray[i][j]);
                         if(tile > 0){
-                            //System.out.println(finalTileArray[i][j]);
                             WallBlock wallBlock = new WallBlock(view.getWidth(), view.getHeight());
                             block.setFitWidth(wallBlock.getWidth());
                             block.setFitHeight(wallBlock.getHeight());
