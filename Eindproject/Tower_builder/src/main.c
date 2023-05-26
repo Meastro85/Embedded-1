@@ -177,7 +177,7 @@ int main() {
   initDisplay();
   enableAllButtons();
   enableAllButtonInterrupts();
-  // enableBuzzer();
+  enableBuzzer();
   initTimer(2, 0, 0);
   setOCRXA(2, 249);
 
